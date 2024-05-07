@@ -11,7 +11,9 @@ function setup() {
   snowbroad.scale= 1.3
   coinGroup= new Group()
   bombGroup= new Group()
-  
+  restart=createSprite(width/2,height/2);
+  restart.addImage("restart",restartImage);
+  restart.scale=0.5
 }
 
 function coins(){
@@ -53,7 +55,14 @@ function draw() {
   if(keyDown("right")){
     snowbroad.x+=5
   }
-  drawSprites();
+  if(snowbroad.x<50){
+    snowbroad.x=50
+  }
+
+  if(snowbroad.x>950){
+    snowbroad.x=950
+  }
+  restart.visible=false
   textSize(25)
   fill("Black")
   text("Score:"+score, 90,50)
@@ -74,14 +83,30 @@ function draw() {
 else if (gameState === "end"){
   coinGroup.setVelocityYEach(0);
   bombGroup.setVelocityYEach(0);
+  restart.visible=true
   snowbroad.changeImage("collided",fallImage)
+  if(mousePressedOver(restart)){
+    reset()
+  }
 }
-}
+drawSprites();
 
+}
+function reset(){
+  gameState = "play";
+  restart.visible = false;
+  snowbroad.changeImage("snowbroad",snowbroadimage);
+  restart.destroy();
+  coinGroup.destroyEach();
+  bombGroup.destroyEach();
+  score = 0;
+  life=3
+}
 function preload(){
   backgroundimage= loadImage("Background.avif")
   snowbroadimage= loadImage("Starting.png")
   coinImage= loadImage("Coins.png")
   bombImage= loadImage("bomb_imag.png")
   fallImage= loadImage("Fall.png")
+  restartImage= loadImage("restart.png")
 }
